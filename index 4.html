@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ふたりのサイン｜v0.6 試験導入版</title>
+<style>
+:root{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;color:#37313a;background:#fff9fb}
+*{box-sizing:border-box}body{margin:0}.wrap{max-width:480px;margin:0 auto;padding:24px 18px 48px}.header{text-align:center;padding:18px 0 20px}.flower{font-size:42px}.header h1{font-size:26px;margin:8px 0}.muted{color:#756b74;font-size:13px;line-height:1.7}.card{background:white;border:1px solid #f0dfe7;border-radius:20px;padding:20px;box-shadow:0 4px 20px #7d3a5b0a}.section-title{font-size:17px;font-weight:800;margin:0 0 10px}.lead{line-height:1.8;font-size:14px}.mini-list{margin:10px 0 0;padding-left:18px;line-height:1.8;font-size:14px}.mini-list li{margin:6px 0}label.field{display:block;font-size:14px;font-weight:700;margin:17px 0 7px}input[type=date]{width:100%;padding:13px;border:1px solid #dfcbd4;border-radius:12px;font-size:17px;background:white;color:#37313a}.option{display:block;padding:12px;margin:8px 0;background:#fff8fa;border:1px solid #ead7df;border-radius:12px;line-height:1.5}.option:has(input:checked){border-color:#c36b92;background:#fff0f6}.option small{display:block;color:#756b74;margin-left:26px}.option input{accent-color:#b95984;margin-right:8px}.checklist label{display:block;padding:12px 12px 12px 14px;margin:8px 0;background:#fff8fa;border:1px solid #ead7df;border-radius:12px;line-height:1.6;font-size:14px}.checklist label:has(input:checked){border-color:#c36b92;background:#fff0f6}.checklist input{accent-color:#b95984;margin-right:8px;transform:translateY(1px)}.primary,.secondary{width:100%;border-radius:12px;padding:15px;font-size:15px;font-weight:700;margin-top:16px;cursor:pointer}.primary{background:#b95c84;color:white;border:0}.secondary{background:white;color:#9c456b;border:1px solid #d69ab4}.primary:disabled{opacity:.5}.preview{background:#f9f0f4;padding:18px;border-radius:14px;line-height:1.85;white-space:pre-wrap}.hidden{display:none}.notice{margin-top:18px;border-top:1px solid #f0e2e9;padding-top:14px}.status{font-size:13px;margin-top:14px;line-height:1.6}.danger{color:#9a3f55}.success{color:#167246}.mode-switch{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}.mode-switch label{border:1px solid #e0cbd6;border-radius:12px;padding:12px 8px;font-size:13px;text-align:center;cursor:pointer}.mode-switch label:has(input:checked){background:#fff0f6;border-color:#b95c84;font-weight:700}.mode-switch input{accent-color:#b95984}.info{background:#fff8f2;border:1px solid #eeddd0;padding:14px;border-radius:14px;line-height:1.7;font-size:13px}.row{display:flex;gap:10px;align-items:center}.row select{min-width:110px;padding:12px;border:1px solid #dfcbd4;border-radius:12px;background:white;font-size:16px}.pill{display:inline-block;color:#8c526e;background:#fff0f6;border-radius:16px;padding:3px 8px;font-size:11px}.subtle{background:#f8fbff;border:1px solid #dce9f5;padding:12px;border-radius:12px;font-size:13px;line-height:1.7}
+</style>
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+</head>
+<body><main class="wrap">
+<header class="header"><div class="flower" aria-hidden="true">🌷</div><h1>ふたりのサイン</h1><p class="muted">言わなくても、やさしく伝わる。<br>ふたりのペースを大切にする小さなサイン。</p></header>
+
+<section class="card" id="step0">
+  <div class="section-title">ご利用前にお読みください</div><span class="pill">v0.6 試験導入版</span>
+  <p class="lead">このアプリは、妊活中のカップルがタイミングについてやさしく伝え合うための<strong>補助ツール</strong>です。診断・治療・排卵日の確定を行うものではありません。</p>
+  <ul class="mini-list">
+    <li><strong>医師指導モード</strong>は、診察で伝えられた予定日をもとに文章を作成します。</li>
+    <li><strong>セルフ妊活モード</strong>は、月経開始日と周期から時期の目安を計算する簡易機能です。</li>
+    <li>LINEで送られるのは<strong>選んだ文章だけ</strong>です。入力した日付やクリニック名は送信されません。</li>
+    <li>メッセージの送信者は<strong>ご本人のLINEアカウント</strong>です。送信先はLINE画面でご自身が選びます。</li>
+    <li>入力内容は<strong>サーバーに保存されません</strong>。この試験利用中は実名などの個人情報は入力しないでください。</li>
+  </ul>
+  <div class="subtle" style="margin-top:12px"><strong>お願い</strong><br>パートナーが事前に受け取りに同意している場合のみご利用ください。体調・気持ち・予定を大切にし、無理のない範囲でご利用ください。</div>
+  <div class="checklist" style="margin-top:16px">
+    <label><input type="checkbox" id="consent1">パートナーが、このメッセージを受け取ることに事前に同意していることを確認しました。</label>
+    <label><input type="checkbox" id="consent2">セルフ妊活モードは参考情報であり、排卵日を確定するものではないことを理解しました。</label>
+    <label><input type="checkbox" id="consent3">送信者は自分のLINEアカウントであり、入力内容は保存されないことを理解しました。</label>
+  </div>
+  <button class="primary" id="startBtn" disabled>同意して利用を開始する</button>
+</section>
+
+<section class="card hidden" id="step1"><strong>お知らせを作成する</strong><span class="pill">v0.6 試験導入版</span>
+<p class="muted">使い方を選んでください。</p>
+<div class="mode-switch" role="group" aria-label="利用モード">
+<label><input type="radio" name="mode" value="clinic" checked> 医師指導モード</label>
+<label><input type="radio" name="mode" value="self"> セルフ妊活モード</label>
+</div>
+<div id="clinicFields"><label class="field" for="day">先生から伝えられた排卵予定日</label><input id="day" type="date" required>
+<p class="muted">診察で説明を受けた日を参考に入力してください。日付は送信文面には含めません。</p></div>
+<div id="selfFields" class="hidden">
+<label class="field" for="lastPeriod">最終月経の開始日</label><input type="date" id="lastPeriod">
+<label class="field" for="cycle">普段の月経周期</label><div class="row"><select id="cycle" aria-label="通常の月経周期"></select><span class="muted">日周期</span></div>
+<label class="option"><input type="checkbox" id="regular">月経周期がおおむね規則的です</label>
+<div class="info" id="estimate" aria-live="polite">周期と月経開始日を入力し、規則的かどうかを選択してください。</div>
+<p class="muted">これはカレンダー式の目安です。実際の排卵日とはずれる場合があります。月経不順・無月経・ホルモン剤使用中などでは推定できません。排卵を確定するものではありません。</p>
+</div>
+<label class="field">伝え方を選ぶ</label>
+<label class="option"><input type="radio" name="tone" value="soft" checked>さりげなく<small>排卵という言葉を使わない</small></label>
+<label class="option"><input type="radio" name="tone" value="clear">わかりやすく<small>妊娠しやすい時期だと知らせる</small></label>
+<label class="option"><input type="radio" name="tone" value="cute">かわいらしく<small>遊び心のあるお知らせ</small></label>
+<button class="primary" id="previewBtn">通知文を確認する</button>
+</section>
+
+<section class="card hidden" id="step2"><strong>送信前の確認</strong><p class="muted">LINEで送る文章は次のとおりです。冒頭にアプリ名の見出しを付けます。相手の了承がある場合だけ送信してください。</p><div class="preview" id="previewText"></div><p class="muted">※入力した予定日やクリニック名は送信されません。送信者はご本人のLINEアカウントです。送信先はLINEの画面でご自身が選びます。</p><button class="primary" id="sendBtn">LINEで送信先を選ぶ</button><button class="secondary" id="backBtn">文章を選び直す</button><div class="status" role="status" aria-live="polite" id="status"></div></section>
+
+<div class="notice muted">この試験導入版は、タイミングについてのコミュニケーションを支援するための補助ツールです。医療上の判断や治療方針は、主治医の説明・診察を優先してください。<br>妊娠を保証するものではありません。お互いの希望と体調を尊重してください。</div>
+</main>
+<script>
+const LIFF_ID = '2012748128-wXXjSkL4';
+const MESSAGE_HEADER = '🌷 ふたりのサインからのお知らせ';
+const messages = {
+  soft: '今週は、ふたりで過ごす時間を少し大切にしたいな 🌷\n無理せず、ふたりのペースで。',
+  clear: '妊娠しやすい時期が近づいています 🌷\nお互いに無理のないタイミングで、ふたりの時間をつくれたらうれしいです。',
+  cute: 'コウノトリさんから小さなお知らせです 🕊️\nそろそろ、ふたりの仲良し週間です。'
+};
+const $ = id => document.getElementById(id);
+const now = new Date();
+$('day').value = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+
+const consentIds = ['consent1','consent2','consent3'];
+function updateStartState(){ $('startBtn').disabled = !consentIds.every(id => $(id).checked); }
+consentIds.forEach(id => $(id).addEventListener('change', updateStartState));
+$('startBtn').addEventListener('click', () => {
+  $('step0').classList.add('hidden');
+  $('step1').classList.remove('hidden');
+  window.scrollTo({top:0, behavior:'smooth'});
+});
+
+const cycleEl = $('cycle');
+for(let n=21; n<=35; n++){
+  const opt = document.createElement('option');
+  opt.value = n;
+  opt.textContent = n;
+  opt.selected = n === 28;
+  cycleEl.appendChild(opt);
+}
+const localDate = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const parseDay = v => {
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(v)) return null;
+  const [y,m,d] = v.split('-').map(Number);
+  const a = new Date(Date.UTC(y,m-1,d,12));
+  return a.getUTCFullYear()===y && a.getUTCMonth()===m-1 && a.getUTCDate()===d ? a : null;
+};
+const addDays = (d,n) => { const a = new Date(d.getTime()); a.setUTCDate(a.getUTCDate()+n); return a; };
+const jdate = d => `${d.getUTCMonth()+1}月${d.getUTCDate()}日`;
+let selfEstimate = null;
+function updateEstimate(){
+  selfEstimate = null;
+  const p = parseDay($('lastPeriod').value), period = Number(cycleEl.value), regular = $('regular').checked;
+  const today = parseDay(localDate(new Date()));
+  const out = $('estimate');
+  if(!p){ out.textContent = '最終月経開始日を入力してください。'; return; }
+  if(p > today){ out.textContent = '未来の月経開始日は入力できません。'; return; }
+  if(!regular){ out.textContent = '周期が不規則な場合は、カレンダーだけでは時期を推定しません。排卵検査薬や医療機関での相談を検討してください。'; return; }
+  if(!Number.isInteger(period) || period < 21 || period > 35){ out.textContent = '21〜35日の範囲で周期を選んでください。'; return; }
+  const ov = addDays(p, period - 15), start = addDays(ov, -5);
+  selfEstimate = {start, ov};
+  out.innerHTML = `<strong>妊娠しやすい時期の目安：${jdate(start)}〜${jdate(ov)}</strong><br>推定排卵日の目安：${jdate(ov)}<br><small>カレンダー上の簡易推定であり、日付の正確性は保証できません。</small>`;
+}
+$('lastPeriod').value = localDate(now);
+for(const id of ['lastPeriod','cycle','regular']) $(id).addEventListener('change', updateEstimate);
+for(const radio of document.querySelectorAll('input[name=mode]')) radio.addEventListener('change', () => {
+  const checked = document.querySelector('input[name=mode]:checked');
+  const isSelf = checked && checked.value === 'self';
+  $('clinicFields').classList.toggle('hidden', isSelf);
+  $('selfFields').classList.toggle('hidden', !isSelf);
+  if(isSelf) updateEstimate();
+});
+
+$('previewBtn').addEventListener('click', () => {
+  const isSelf = document.querySelector('input[name=mode]:checked').value === 'self';
+  if(isSelf){ updateEstimate(); if(!selfEstimate){ alert('セルフ妊活モードの入力内容を確認してください。'); return; } }
+  else if(!$('day').value){ alert('排卵予定日を選択してください。'); return; }
+  const tone = document.querySelector('input[name=tone]:checked').value;
+  $('previewText').textContent = MESSAGE_HEADER + '\n\n' + messages[tone];
+  $('step1').classList.add('hidden');
+  $('step2').classList.remove('hidden');
+  $('status').textContent = '';
+  window.scrollTo({top:0, behavior:'smooth'});
+});
+$('backBtn').addEventListener('click', () => {
+  $('step2').classList.add('hidden');
+  $('step1').classList.remove('hidden');
+  window.scrollTo({top:0, behavior:'smooth'});
+});
+
+let liffReady = false;
+async function initLiff(){
+  if(!window.liff || !LIFF_ID) return;
+  try {
+    await liff.init({ liffId: LIFF_ID });
+    liffReady = true;
+  } catch(e) {
+    console.error('LIFF initialization failed', e);
+  }
+}
+initLiff();
+$('sendBtn').addEventListener('click', async () => {
+  const status = $('status');
+  const btn = $('sendBtn');
+  status.textContent = '';
+  if(!liffReady){ status.className = 'status danger'; status.textContent = 'LINEとの接続が完了していません。本番用のミニアプリURLから開き直してください。'; return; }
+  if(!liff.isLoggedIn()){ status.className = 'status danger'; status.textContent = 'LINEでログインしてからお試しください。'; return; }
+  if(!liff.isApiAvailable('shareTargetPicker')){ status.className = 'status danger'; status.textContent = 'この環境では送信先選択機能が使用できません。LINEアプリ内から開き直してください。'; return; }
+  btn.disabled = true;
+  try {
+    const result = await liff.shareTargetPicker([{ type:'text', text:$('previewText').textContent }], { isMultiple:false });
+    status.className = 'status ' + (result ? 'success' : '');
+    status.textContent = result ? 'LINEの送信操作が完了しました。' : '送信が取り消されたか、完了を確認できませんでした。LINEのトークを確認してください。';
+  } catch(e) {
+    console.error(e);
+    status.className = 'status danger';
+    status.textContent = '送信できませんでした。LINEアプリで開き直すか、設定を確認してください。';
+  } finally {
+    btn.disabled = false;
+  }
+});
+</script></body></html>
