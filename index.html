@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ふたりのサイン｜試作版</title>
+<style>
+:root{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN", "Noto Sans JP",sans-serif;color:#37313a;background:#fff9fb}*{box-sizing:border-box}body{margin:0}.wrap{max-width:480px;margin:0 auto;padding:24px 18px 48px}.header{text-align:center;padding:18px 0 20px}.flower{font-size:42px}.header h1{font-size:26px;margin:8px 0}.muted{color:#756b74;font-size:13px;line-height:1.7}.card{background:white;border:1px solid #f0dfe7;border-radius:20px;padding:20px;box-shadow:0 4px 20px #7d3a5b0a}label.field{display:block;font-size:14px;font-weight:700;margin:17px 0 7px}input[type=date]{width:100%;padding:13px;border:1px solid #dfcbd4;border-radius:12px;font-size:17px;background:white;color:#37313a}.option{display:block;padding:12px;margin:8px 0;background:#fff8fa;border:1px solid #ead7df;border-radius:12px;line-height:1.5}.option:has(input:checked){border-color:#c36b92;background:#fff0f6}.option small{display:block;color:#756b74;margin-left:26px}.option input{accent-color:#b95984;margin-right:8px}.primary,.secondary{width:100%;border-radius:12px;padding:15px;font-size:15px;font-weight:700;margin-top:16px;cursor:pointer}.primary{background:#b95c84;color:white;border:0}.secondary{background:white;color:#9c456b;border:1px solid #d69ab4}.primary:disabled{opacity:.5}.preview{background:#f9f0f4;padding:18px;border-radius:14px;line-height:1.85;white-space:pre-wrap}.hidden{display:none}.notice{margin-top:18px;border-top:1px solid #f0e2e9;padding-top:14px}.status{font-size:13px;margin-top:14px;line-height:1.6}.danger{color:#9a3f55}.success{color:#167246}
+</style>
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+</head>
+<body><main class="wrap">
+<header class="header"><div class="flower" aria-hidden="true">🌷</div><h1>ふたりのサイン</h1><p class="muted">言わなくても、やさしく伝わる。<br>ふたりのペースを大切にする小さなサイン。</p></header>
+<section class="card" id="step1"><strong>お知らせを作成する</strong>
+<label class="field" for="day">先生から伝えられた排卵予定日</label><input id="day" type="date" required>
+<p class="muted">排卵予測機能はありません。診察で説明を受けた日を参考に入力してください。日付は送信文面には含めません。</p>
+<label class="field">伝え方を選ぶ</label>
+<label class="option"><input type="radio" name="tone" value="soft" checked>さりげなく<small>排卵という言葉を使わない</small></label>
+<label class="option"><input type="radio" name="tone" value="clear">わかりやすく<small>妊娠しやすい時期だと知らせる</small></label>
+<label class="option"><input type="radio" name="tone" value="cute">かわいらしく<small>遊び心のあるお知らせ</small></label>
+<button class="primary" id="previewBtn">通知文を確認する</button>
+</section>
+<section class="card hidden" id="step2"><strong>送信前の確認</strong><p class="muted">LINEで送る文章は次のとおりです。相手の了承がある場合だけ送信してください。</p><div class="preview" id="previewText"></div><p class="muted">※入力した予定日やクリニック名は送信されません。送信先はLINEの画面でご自身が選びます。</p><button class="primary" id="sendBtn">LINEで送信先を選ぶ</button><button class="secondary" id="backBtn">文章を選び直す</button><div class="status" role="status" aria-live="polite" id="status"></div></section>
+<div class="notice muted">この試作版はタイミング指導を代行する医療アプリではありません。妊娠を保証するものでもありません。お互いの希望と体調を尊重してください。<br>入力した日付はサーバーに保存されません。試験利用中は実際の患者情報を入力しないでください。</div>
+</main>
+<script>
+// LINEミニアプリの開発用LIFF ID（公開識別子、秘密鍵ではありません）
+const LIFF_ID = '2012748126-k0TVZkHp';
+const messages={
+ soft:'今週は、ふたりで過ごす時間を少し大切にしたいな 🌷\n無理せず、ふたりのペースで。',
+ clear:'妊娠しやすい時期が近づいています 🌿\nお互いに無理のないタイミングで、ふたりの時間をつくれたらうれしいです。',
+ cute:'コウノトリさんから小さなお知らせです 🕊️\nそろそろ、ふたりの仲良し週間です。'
+};
+const $=id=>document.getElementById(id);
+const now=new Date();$('day').value=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+$('previewBtn').addEventListener('click',()=>{
+ if(!$('day').value){alert('排卵予定日を選択してください。');return;}
+ const tone=document.querySelector('input[name=tone]:checked').value;
+ $('previewText').textContent=messages[tone];$('step1').classList.add('hidden');$('step2').classList.remove('hidden');$('status').textContent='';
+});
+$('backBtn').addEventListener('click',()=>{$('step2').classList.add('hidden');$('step1').classList.remove('hidden')});
+let liffReady=false;
+async function initLiff(){
+ if(!window.liff||!LIFF_ID)return;
+ try{await liff.init({liffId:LIFF_ID});liffReady=true;}catch(e){console.error('LIFF initialization failed',e)}
+}
+initLiff();
+$('sendBtn').addEventListener('click',async()=>{
+ const status=$('status');const btn=$('sendBtn');status.textContent='';
+ if(!liffReady){status.className='status danger';status.textContent='LINE連携はまだ設定されていません。LIFF IDの設定とHTTPS公開後に送信テストできます。';return;}
+ if(!liff.isLoggedIn()){status.className='status danger';status.textContent='LINEでログインしてからお試しください。';return;}
+ if(!liff.isApiAvailable('shareTargetPicker')){status.className='status danger';status.textContent='この環境ではLINEの送信先選択機能を利用できません。LINEアプリ内から開いてください。';return;}
+ btn.disabled=true;
+ try{
+  const result=await liff.shareTargetPicker([{type:'text',text:$('previewText').textContent}],{isMultiple:false});
+  status.className='status '+(result?'success':'');
+  status.textContent=result?'LINEの送信操作が完了しました。':'送信が取り消されたか、完了を確認できませんでした。LINEのトークを確認してください。';
+ }catch(e){console.error(e);status.className='status danger';status.textContent='送信できませんでした。LINEアプリで開き直すか、設定を確認してください。'}finally{btn.disabled=false;}
+});
+</script></body></html>
